@@ -1,7 +1,7 @@
 apply plugin: 'maven'
 
 repositories {
-    maven { url "https://github.com/qranio-com/wagon-git/releases" }
+    maven { url "https://raw.github.com/qranio-com/wagon-git/releases" }
 }
 
 configurations {
