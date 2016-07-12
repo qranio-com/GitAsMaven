@@ -94,6 +94,6 @@ def urlExists(String repositoryUrl) {
 }
 
 def getBase64EncodedCredentials() {
-    def s = MAVEN_GIT_USERNAME + ":" + MAVEN_GIT_PASSWORD;
+    def s = USERNAME + ":" + PASSWORD;
     return s.bytes.encodeBase64().toString()
 }
