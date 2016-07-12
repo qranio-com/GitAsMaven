@@ -48,7 +48,7 @@ task lookForArtifacts {
         println(artifactExists ? "existing artifact found" : "no existing artifact found")
         println("")
 
-        if (urlExists(repositoryUrl)) {
+        if (artifactExists) {
             throw new RuntimeException("Artifact with version " + ARTIFACT_VERSION + " already exist - not executing uploadArchives")
         }
         return true
