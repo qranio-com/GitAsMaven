@@ -10,8 +10,13 @@ configurations {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-
-    deployLibrary "ar.com.synergian:wagon-git:0.3.0"
+    
+    def library = "ar.com.synergian:wagon-git:0.3.0"    
+    printLine()
+    println(library)
+    printLine()
+    
+    deployLibrary library
 }
 
 task androidJavadocs(type: Javadoc) {
@@ -35,22 +40,30 @@ artifacts {
 }
 
 task lookForArtifacts {
+    
     doLast {
+    
         def artifactName = ARTIFACT_NAME + '-' + ARTIFACT_VERSION + '.aar'
         def artifactPath = ARTIFACT_PACKAGE.replace(".", "/") + "/" + ARTIFACT_NAME + "/" + ARTIFACT_VERSION + "/" + artifactName
         def repositoryUrl = 'https://api.bitbucket.org/1.0/repositories/' + COMPANY + '/' + REPOSITORY_NAME + '/raw/releases/' + artifactPath
 
-        println("")
-        println("Checking if artifact already exists: " + artifactName)
-        println("at URL: " + repositoryUrl)
+        printLine()
+        println("Checking if artifact already exists: \n" + artifactName)
+        println("\nURL: \n" + repositoryUrl)
 
+        println("\nResponse:")
         def artifactExists = urlExists(repositoryUrl)
-        println(artifactExists ? "existing artifact found" : "no existing artifact found")
-        println("")
+        println(artifactExists ? "Existing artifact found" : "No existing artifact found")
+        printLine()
 
         if (artifactExists) {
-            throw new RuntimeException("Artifact with version " + ARTIFACT_VERSION + " already exist - not executing uploadArchives")
+            
+            println("Artifact with version " + ARTIFACT_VERSION + " already exist - Not executing uploadArchives")
+            printLine()
+            
+            throw new RuntimeException("")
         }
+        
         return true
     }
 }
@@ -77,23 +90,37 @@ uploadArchives {
 def urlExists(String repositoryUrl) {
 
     try {
-        def connection = (HttpURLConnection) new URL(repositoryUrl).openConnection()
 
+        def connection = (HttpURLConnection) new URL(repositoryUrl).openConnection()
         connection.setRequestProperty("Authorization", "Basic " + getBase64EncodedCredentials())
         connection.setConnectTimeout(10000)
         connection.setReadTimeout(10000)
         connection.setRequestMethod("HEAD")
 
         def responseCode = connection.getResponseCode()
-        println("responseCode: " + responseCode)
+        println("ResponseCode: " + responseCode)
 
         return (200 == responseCode)
+ 
     } catch (IOException ignored) {
         return false
     }
 }
 
 def getBase64EncodedCredentials() {
-    def s = USERNAME + ":" + PASSWORD;
-    return s.bytes.encodeBase64().toString()
+ 
+     def s = USERNAME + ":" + PASSWORD;
+     return s.bytes.encodeBase64().toString()
+} 
+ 
+def printLine() {
+    
+    println("")
+    println(getLine())
+    println("")
+}
+
+def getLine() {
+    
+    return "-------------------------------------------------------------------------------------------------------------"
 }
